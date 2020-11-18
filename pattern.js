@@ -1,8 +1,8 @@
-var i;
-
+var i,j,x="";
 for(i=1;i<=5;i++){
-       console.log("*".repeat(i));
-    }
-  
-  console.log()
-
+  for(j=1;j<=i;j++){
+    x+="*";
+  }
+  x+="\n";
+}
+console.log(x);
