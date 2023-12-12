@@ -20,8 +20,7 @@ function combination(n,r){
     if(n < 0n || r < 0n){
         return
     }
-    const denominator = factorial(r) * factorial(n-r) 
-    return factorial(n) / denominator   // n!/((n-r)! r!)
+    return factorial(n) / (factorial(r) * factorial(n-r))   // n!/((n-r)! r!)
 }
 
 console.log(permutation(3,2), ' permutation')
