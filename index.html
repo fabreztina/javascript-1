@@ -5,8 +5,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phone Purchase</title>
+    <link rel="stylesheet" type="text/css" href="jsonfile.css">
 </head>
 <body>
-    <script src="problem1.js"></script>
+    <div id="root">
+        <div id="input" class="input"> 
+            [{
+                id: 1,
+                name: [{ a: 'str1', b: 23, c: null, d: undefined }, 
+                            ['str1', 'str2', ['str1', ['str1', 44, {c: 'c', d: [1,2]}]]],
+                                    [1, 3, 4], null, undefined, 23, [32, 54, 76]],
+                age: 21,
+                undefined: undefined,
+                address: function aaa() {
+                    console.log('Hello')
+                },
+                null: null
+            }]
+        </div>
+        <div class="container1">
+            <button onclick="displayJson()" class="button">Convert to JSON</button><br/>
+        </div>
+        <div class="container2">
+            <pre id="outputjson" class="output"></pre>
+        </div>
+    </div>
+    <script src="convertObjectToJson.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
