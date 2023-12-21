@@ -36,11 +36,11 @@ middlePattern3(7)
 // METHOD 2
 
 function middlePattern2(n){
-    let str = ''
     const length = n+(n-1)
     let startValue = Math.floor(length/2)
     
     for(let i = 1; i <= n; i++){
+        let str = ''
         let count = i
         let nextValue = startValue + 2
         for(let j = 0; j < length; j++){
@@ -63,9 +63,8 @@ function middlePattern2(n){
             }
         }
         startValue--
-        str += '\n'
+        console.log(str)
     }
-    console.log(str)
 }
 middlePattern2(7)
 

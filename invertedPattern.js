@@ -49,7 +49,6 @@ function invertedPattern(n, k){
         }
         str += '\n'
     }
-    // console.log(str)
     k--
     return str +=  invertedPattern(n, k)
 }

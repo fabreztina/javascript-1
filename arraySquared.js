@@ -1,8 +1,4 @@
 function arraySquared(arr){
-    let result = []
-    arr.map((number) => {
-        result.push(number * number)
-    })
-    return result
+    return arr.map((number) => number * number)
 }
 console.log(arraySquared([1,2,3,4,5]))

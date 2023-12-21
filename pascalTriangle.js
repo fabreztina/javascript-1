@@ -20,13 +20,13 @@ function combination(n,r){
 function pascalTriangle(n){
     let str = ''
     let characterStartPosition = n
-    for(let row = 1; row <= n; row++){
+    for(const row = 1; row <= n; row++){
         let nextCharacterPosition = characterStartPosition
         let characterCount = row
         let count = 0
-        for(let column = 1; column <= n+(n-1); column++){
+        for(const column = 1; column <= n+(n-1); column++){
             if(column === characterStartPosition || column === nextCharacterPosition && characterCount > 0){
-                let a = row - 1, b = count
+                const a = row - 1, b = count
                 str += combination(a,b)
                 nextCharacterPosition += 2
                 characterCount--

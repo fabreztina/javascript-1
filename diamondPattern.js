@@ -53,4 +53,4 @@ function diamondPattern(n){
     }
     console.log(str)
 }
-diamondPattern(3)
+diamondPattern(10)

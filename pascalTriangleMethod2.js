@@ -9,7 +9,7 @@ function pascalTriangle(n){
         let rowValue = []
         let count = 0
         for(let column = 1; column <= n+(n-1); column++){
-            if(column === characterStartPosition || column === nextCharacterPosition && characterCount > 0){
+            if((column === nextCharacterPosition) && characterCount > 0){
                 if(pascalTriangleValues.length === 0){
                     str += 1
                     rowValue.push(1)
@@ -24,6 +24,7 @@ function pascalTriangle(n){
                     rowValue.push(temp)
                     nextCharacterPosition += 2
                     characterCount--
+
                     count++
                 }
             }
@@ -37,6 +38,6 @@ function pascalTriangle(n){
     }
     return str
 }
-console.log(pascalTriangle(6))
+console.log(pascalTriangle(5))
 
 // number = number * (row - count) / (count)

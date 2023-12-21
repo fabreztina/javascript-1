@@ -12,6 +12,6 @@ function squarePattern(r,c){
     return filteredArray.join('\n')
 
 }
-console.log(squarePattern(1,1),'1,2')
+console.log(squarePattern(1,1),'1,1')
 console.log(squarePattern(2,2),'2,2')
 console.log(squarePattern(2,3),'2,3')
