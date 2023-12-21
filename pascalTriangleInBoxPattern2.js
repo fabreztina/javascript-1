@@ -1,5 +1,5 @@
 function createCell(options, value){
-    let top = options.skipTop ? '' : ' --'
+    let top = options.skipTop ? '' : ` -- `
     let left = options.skipLeft ? '' : '|'
     let s =  `${top}@${left} ${value} |@ -- `
     return s.split('@')
@@ -26,18 +26,14 @@ function createRow(values, previousRowLength){
             arr.push(createCell({skipTop: false, skipLeft: true}, values[i]))
         }
     }
-    for (let i = 0; i < arr.length; i++) {
-        str += arr[i][0]
-    }
-    str += '\n';
-    
-    for (let j = 0; j < arr.length; j++) {
-        str += arr[j][1]
-    }
-    str += '\n';
-    
-    for (let k = 0; k < arr.length; k++) {
-        str +=  arr[k][2]
+
+    for(let i = 0; i < 3; i++){
+        for(let j = 0; j < arr.length; j++){
+            str += arr[j][i]
+        }
+        if(i !== 2){
+            str += '\n'
+        }
     }
     return str
 }
@@ -80,4 +76,4 @@ function pascalTriangle(n){
     })
     return createGrid(array)
 }
-console.log(pascalTriangle(4))
+console.log(pascalTriangle(5))
