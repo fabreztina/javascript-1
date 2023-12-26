@@ -37,13 +37,13 @@ function editTodoList(todoList, id, todo, tags){
 
 function createTodoList(createdList, todo, tags){
     let id = createdList.reduce((acc, cur) => acc > cur.id ? acc : cur.id, 0) + 1
-    createdList.push({id: id, todo: todo, status: false, tags: tags})
+    createdList.push({id: id, todo: todo, status: false, tags: tags ? tags : []})
     return createdList
 }
 
 let created_list = []
 
-createTodoList(created_list,'Wake up', [])
+createTodoList(created_list,'Wake up')
 createTodoList(created_list,'Brush Teeth', ['Morning', 'Night'])
 createTodoList(created_list,'Eat food', ['Morning', 'Afternoon', 'Night'])
 // console.log(created_list,'after create')
