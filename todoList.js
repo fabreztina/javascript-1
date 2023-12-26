@@ -1,7 +1,5 @@
 function displayByTagName(todoList, tagNames){
-    return todoList.filter(v => 
-        v.tags && tagNames.every(tag => v.tags.includes(tag))
-    );
+    return todoList.filter(v => tagNames.every(tag => v.tags.includes(tag)) );
 }
 
 function displayTodoList(todoList){
@@ -27,7 +25,6 @@ function deleteTodoList(todoList, id){
 }
 
 function editTodoList(todoList, id, todo, tags){
-    console.log(tags)
     const index = todoList.findIndex(v => id === v.id);
     if(index !== -1){
         todoList[index] = { ...todoList[index], todo, tags: tags ? tags : todoList[index].tags}
@@ -60,4 +57,4 @@ updateStatus(created_list, 1, true)
 
 console.log(displayTodoList(created_list), 'display')
 
-console.log(displayByTagName(created_list,['Night', 'Morning']), 'display by tag name')
+console.log(displayByTagName(created_list,['Night']), 'display by tag name')
