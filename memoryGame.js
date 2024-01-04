@@ -1,18 +1,17 @@
-function generateDeckOfCards(){
-    const numbers = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']
-    const designs = ['D','H','S','C']
+function generateDeckOfCards() {
+    const numbers = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+    const designs = ['D', 'H', 'S', 'C']
     let deckOfCards = []
 
-    for(let i = 0; i < designs.length; i++){
-        for(let j = 0; j < numbers.length; j++){
+    for (let i = 0; i < designs.length; i++) {
+        for (let j = 0; j < numbers.length; j++) {
             deckOfCards.push(`${numbers[j]}-${designs[i]}`)
         }
     }
-    // console.log(deckOfCards, 'deckofcards')
     return deckOfCards
 }
 // generateDeckOfCards()
-function groupCardsByValue(){
+function groupCardsByValue() {
     const deckOfCards = generateDeckOfCards()
     let splitNumbersAndDesign = deckOfCards.join('-').split('-')
     let groupCards = {}
@@ -32,27 +31,27 @@ function groupCardsByValue(){
     //
 }
 
-function chooseRandomPair(arrangedCards, pairCount){
+function chooseRandomPair(arrangedCards, pairCount) {
     let pairs = []
     while (pairCount > 0) {
-        let pickRandomPair = arrangedCards[Math.floor(Math.random() * arrangedCards.length)]
-        if (pickRandomPair.length > 1) {
-            // change logic (use splice)
-            let pickedPair = pickRandomPair.slice(0, 2)
+        let pickRandomPairPosition = Math.floor(Math.random() * arrangedCards.length)
+        let randomPair = arrangedCards[pickRandomPairPosition]
+        if (randomPair.length > 1) {
+            let pickedPair = randomPair.slice(0, 2)
             pairs.push(pickedPair)
-            arrangedCards = arrangedCards.map(subArray => subArray.filter(card => !pickedPair.includes(card)))
-            //
+            // arrangedCards = arrangedCards.map(subArray => subArray.filter(card => !pickedPair.includes(card)))
+            arrangedCards.splice(pickRandomPairPosition, 2)
             pairCount -= 2
         }
     }
-    return pairs.flat(Infinity)
+    return pairs.flat(1)
 }
 
-function shuffleCards(arrangedCards, pairCount){
+function shuffleCards(arrangedCards, pairCount) {
     let pairs = chooseRandomPair(arrangedCards, pairCount)
     let currentIndex = pairs.length, randomIndex
 
-    while(currentIndex > 0){
+    while (currentIndex > 0) {
         randomIndex = Math.floor(Math.random() * currentIndex)
         currentIndex--
         [pairs[currentIndex], pairs[randomIndex]] = [pairs[randomIndex], pairs[currentIndex]]
@@ -60,53 +59,48 @@ function shuffleCards(arrangedCards, pairCount){
     return pairs
 }
 
-function displayCards(array){
+function displayCards(array) {
     let str = ''
-    for(let i = 0; i < array.length; i++){
-        for(let j = 0; j < array[i].length; j++){
+    for (let i = 0; i < array.length; i++) {
+        for (let j = 0; j < array[i].length; j++) {
             str += array[i][j] + '  '
         }
-        if(i !== array.length - 1){
+        if (i !== array.length - 1) {
             str += '\n'
         }
     }
     console.log(str)
 }
 
-function spreadCardsInArray(row,column){
+function spreadCards(row, column) {
     const arrangedCards = groupCardsByValue()
-    //change logic (use reduce to create 2D array)
-    let array = Array(row + 1).fill(0).map(() => Array(column + 1).fill(0))
     const pairCount = row * column
 
-    const shuffledCards = shuffleCards(arrangedCards, pairCount)
+    const hiddenCards = shuffleCards(arrangedCards, pairCount)
+    .reduce((acc, currentCard, index) => {
+        acc[index] = currentCard
+        return acc
+    }, {})
+
     let count = 0
-    const hideCards = {}
-    for (let i = 1; i <= row; i++) {
-        for (let j = 1; j <= column; j++) {
-            if (count < shuffledCards.length) {
-                hideCards[count] = shuffledCards[count]
-                array[i][j] = count
-                count++
-            }
+    let array = Array(row).fill(0).map(() => Array(column).fill(0))
+    for (let i = 0; i < row; i++) {
+        for (let j = 0; j < column; j++) {
+            array[i][j] = count
+            count++
         }
     }
-    //
 
-   let filteredArray =  array.slice(1)
-    .map(val => val
-    .filter((e,i) => i !== 0))
-
-    return {filteredArray, hideCards}
+    return { filteredArray: array, hiddenCards }
 }
+// console.log(spreadCards(2,5))
 
-function pickACard(array, card){
-    const {filteredArray, hideCards} = array
-    console.log(filteredArray, hideCards, '==>')
-    const firstCard = hideCards[card] 
-    for(let i = 0; i < filteredArray.length; i++){
-        for(let j = 0; j < filteredArray[i].length; j++){
-            if(card === filteredArray[i][j]){
+function pickACard(cards, card) {
+    const { filteredArray, hiddenCards } = cards
+    const firstCard = hiddenCards[card]
+    for (let i = 0; i < filteredArray.length; i++) {
+        for (let j = 0; j < filteredArray[i].length; j++) {
+            if (card === filteredArray[i][j]) {
                 filteredArray[i][j] = firstCard
                 break
             }
@@ -115,72 +109,87 @@ function pickACard(array, card){
     return filteredArray
 }
 
-function hideCards(array, first_card, second_card){
-    const {filteredArray, hideCards} = array
-    for(let i = 0; i < filteredArray.length; i++){
-        for(let j = 0; j < filteredArray[i].length; j++){
-            if(hideCards[first_card] === filteredArray[i][j]){
+function hideUnmatchedCards(array, first_card, second_card) {
+    const { filteredArray, hiddenCards } = array
+    for (let i = 0; i < filteredArray.length; i++) {
+        for (let j = 0; j < filteredArray[i].length; j++) {
+            if (hiddenCards[first_card] === filteredArray[i][j]) {
                 filteredArray[i][j] = Number(first_card)
             }
-            else if(hideCards[second_card] === filteredArray[i][j]){
+            else if (hiddenCards[second_card] === filteredArray[i][j]) {
                 filteredArray[i][j] = Number(second_card)
             }
         }
     }
     return filteredArray
 }
-function playerTurn(cards, n){
+function getPlayerScoreForEachTurn(cards, currentPlayer, scoreTable) {
     let isEqual = false
-    let player_score = 0
-    let firstCard = prompt(`Player ${n}, pick your first card`)
-    while(cards.hideCards[Number(firstCard)] === true){
-        firstCard = prompt(`Player ${n}, the card is already picked. Please pick a new card`)
+    let firstCard = prompt(`Player ${currentPlayer}, pick your first card`)
+    while (cards.hiddenCards[Number(firstCard)] === true) {
+        firstCard = prompt(`Player ${currentPlayer}, the card is already picked. Please pick a new card`)
     }
     displayCards(pickACard(cards, Number(firstCard)))
 
-    let secondCard = prompt(`Player ${n}, pick your second card`)
-    while(cards.hideCards[Number(secondCard)] === true || cards.hideCards[Number(firstCard)] === cards.hideCards[Number(secondCard)]){
-        secondCard = prompt(`Player ${n}, the card is already picked. Please pick a new card`)
+    let secondCard = prompt(`Player ${currentPlayer}, pick your second card`)
+    while (cards.hiddenCards[Number(secondCard)] === true || cards.hiddenCards[Number(firstCard)] === cards.hiddenCards[Number(secondCard)]) {
+        secondCard = prompt(`Player ${currentPlayer}, the card is already picked. Please pick a new card`)
     }
     displayCards(pickACard(cards, Number(secondCard)))
 
-    if(cards.hideCards[Number(firstCard)].slice(2) === cards.hideCards[Number(secondCard)].slice(2)){ 
-        cards.hideCards[Number(firstCard)] = true
-        cards.hideCards[Number(secondCard)] = true
-        player_score += 1
+    if (cards.hiddenCards[Number(firstCard)].slice(2) === cards.hiddenCards[Number(secondCard)].slice(2)) {
+        cards.hiddenCards[Number(firstCard)] = true
+        cards.hiddenCards[Number(secondCard)] = true
+        scoreTable[currentPlayer] = scoreTable[currentPlayer] ? scoreTable[currentPlayer] + 1 : 1
         isEqual = true
     }
-    else{
-        displayCards(hideCards(cards, firstCard, secondCard))
+    else {
+        displayCards(hideUnmatchedCards(cards, firstCard, secondCard))
     }
-    return {score: player_score, isEqual: isEqual, player: n}
+
+    return isEqual
 }
 
-function getWinner(scoreTable) {
-   let players = Object.keys(scoreTable)
-   return players.reduce((acc, cur) => scoreTable[cur] > scoreTable[acc] ? cur : acc)
+function getWinner(scoreBoard) {
+    let maxScore = 0, winners = []
+    for(const [player, score] of Object.entries(scoreBoard)){
+        if(score > maxScore){
+            maxScore = score
+            winners = [player]
+        }
+        else if(score === maxScore){
+            winners.push(player)
+        }
+    }  
+    return {winners , maxScore}
 }
 
-function memoryGame(row, column){
-    let cards = spreadCardsInArray(row,column)
-    displayCards(cards.filteredArray)
+function getNextPlayer(numberOfPlayers, currentPlayer){
+   return currentPlayer >= numberOfPlayers ? 1 : currentPlayer + 1
+}
+
+function isGameOver(cards){
+    return cards.filteredArray.map(subArray => subArray.filter(value => typeof value === 'number'))
+    .flat(1).length === 0
+}
+
+function memoryGame(row, column) {
     let numberOfPlayers = prompt('Enter number of players')
+    let cards = spreadCards(row, column)
+    displayCards(cards.filteredArray)
     let currentPlayer = 1
-    let numberOfTurns = row*column
-    let scoreTable = {}
-    while(numberOfTurns > 0 && currentPlayer <= numberOfPlayers){
-        let {score, isEqual, player} = playerTurn(cards, currentPlayer)
-        scoreTable[player] = scoreTable[player] ? scoreTable[player] + score : score
-        currentPlayer++
-        if(isEqual){
-            currentPlayer--
+    let scoreBoard = {}
+    while (!isGameOver(cards)) {
+        let isEqual = getPlayerScoreForEachTurn(cards, currentPlayer, scoreBoard)
+        if (!isEqual) {
+            currentPlayer = getNextPlayer(numberOfPlayers, currentPlayer)
         }
-        if(currentPlayer > numberOfPlayers){
-            currentPlayer = 1
-        }
-        numberOfTurns = cards.filteredArray.map(subArray => subArray.filter(value => typeof value === 'number')).flat(1).length
     }
-    let winner = getWinner(scoreTable)
-    return `Winner is player ${winner} and score is ${scoreTable[winner]}`
+    let {winners, maxScore} = getWinner(scoreBoard)
+
+    if(winners.length > 1){
+        return `Match is tie between players ${winners} and the score is ${maxScore}`
+    }
+    return `Winner is player ${winners} and score is ${maxScore} `
 }
-console.log(memoryGame(2,3))
+console.log(memoryGame(2,4))
