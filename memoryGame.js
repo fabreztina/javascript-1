@@ -8,9 +8,10 @@ function generateDeckOfCards(){
             deckOfCards.push(`${numbers[j]}-${designs[i]}`)
         }
     }
+    // console.log(deckOfCards, 'deckofcards')
     return deckOfCards
 }
-
+// generateDeckOfCards()
 function groupCardsByValue(){
     const deckOfCards = generateDeckOfCards()
     let splitNumbersAndDesign = deckOfCards.join('-').split('-')
@@ -101,6 +102,7 @@ function spreadCardsInArray(row,column){
 
 function pickACard(array, card){
     const {filteredArray, hideCards} = array
+    console.log(filteredArray, hideCards, '==>')
     const firstCard = hideCards[card] 
     for(let i = 0; i < filteredArray.length; i++){
         for(let j = 0; j < filteredArray[i].length; j++){
@@ -130,13 +132,21 @@ function hideCards(array, first_card, second_card){
 function playerTurn(cards, n){
     let isEqual = false
     let player_score = 0
-    const firstCard = prompt(`Player ${n}, pick your first card`)
+    let firstCard = prompt(`Player ${n}, pick your first card`)
+    while(cards.hideCards[Number(firstCard)] === true){
+        firstCard = prompt(`Player ${n}, the card is already picked. Please pick a new card`)
+    }
     displayCards(pickACard(cards, Number(firstCard)))
 
-    const secondCard = prompt(`Player ${n}, pick your second card`)
+    let secondCard = prompt(`Player ${n}, pick your second card`)
+    while(cards.hideCards[Number(secondCard)] === true || cards.hideCards[Number(firstCard)] === cards.hideCards[Number(secondCard)]){
+        secondCard = prompt(`Player ${n}, the card is already picked. Please pick a new card`)
+    }
     displayCards(pickACard(cards, Number(secondCard)))
 
-    if(cards.hideCards[Number(firstCard)].slice(2) === cards.hideCards[Number(secondCard)].slice(2)){
+    if(cards.hideCards[Number(firstCard)].slice(2) === cards.hideCards[Number(secondCard)].slice(2)){ 
+        cards.hideCards[Number(firstCard)] = true
+        cards.hideCards[Number(secondCard)] = true
         player_score += 1
         isEqual = true
     }
