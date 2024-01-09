@@ -40,9 +40,11 @@ function pickCards(playerNumber, player1, player2){
     }
     console.log(currentPlayerTopCard, playerNumber)
     let characteristic = prompt(`Player ${playerNumber}, pick a characteristic`)
-    console.log(`Player ${playerNumber} score : ${currentPlayerTopCard[characteristic]}`)
 
-    console.log(`Player ${oppositePlayerNumber} score : ${oppositePlayerTopCard[characteristic]}`)
+    if(currentPlayerTopCard[characteristic] !== undefined){
+        console.log(`Player ${playerNumber} score : ${currentPlayerTopCard[characteristic]}`)
+        console.log(`Player ${oppositePlayerNumber} score : ${oppositePlayerTopCard[characteristic]}`)
+    }
 
     return {
         characteristic: characteristic, 
@@ -52,28 +54,33 @@ function pickCards(playerNumber, player1, player2){
 }
 
 
+
 function chooseDifferentCharacteristic(currentPlayerTopCard, playerNumber, characteristic) {
     let pickedCharacteristic = prompt(`Player ${playerNumber}, please pick a new characteristic`)
 
-    while (characteristic === pickedCharacteristic) {
+    while (pickedCharacteristic !== undefined && characteristic === pickedCharacteristic) {
         pickedCharacteristic = prompt(`Player ${playerNumber}, please pick a new characteristic`)
     }
 
-    return { characteristicValue: currentPlayerTopCard[pickedCharacteristic], characteristic: pickedCharacteristic }
+    return { characteristicValue: currentPlayerTopCard[pickedCharacteristic], newCharacteristic: pickedCharacteristic }
 }
 
 
-function getNextPlayerUsingSameCard(currentPlayerTopCard, playerNumber, characteristicc, oppositePlayerTopCard){
-    let {characteristicValue, characteristic} = chooseDifferentCharacteristic(currentPlayerTopCard, playerNumber, characteristicc)
+function getNextPlayerUsingSameCard(currentPlayerTopCard, playerNumber, oldCharacteristic, oppositePlayerTopCard){
+    let {characteristicValue, newCharacteristic} = chooseDifferentCharacteristic(currentPlayerTopCard, playerNumber, oldCharacteristic)
+    let oppositePlayerNumber = playerNumber === 1 ? 2 : 1
 
-    if(characteristicValue > oppositePlayerTopCard[characteristic]){
-        return 1
+    console.log(`Player ${playerNumber} score : ${currentPlayerTopCard[newCharacteristic]}`)
+    console.log(`Player ${oppositePlayerNumber} score : ${oppositePlayerTopCard[newCharacteristic]}`)
+
+    if(characteristicValue > oppositePlayerTopCard[newCharacteristic]){
+        return playerNumber === 1 ? 1 : 2
     }
-    else if(characteristicValue < oppositePlayerTopCard[characteristic]){
-        return 2
+    else if(characteristicValue < oppositePlayerTopCard[newCharacteristic]){
+        return playerNumber === 1 ? 2 : 1
     }
     else{
-        return getNextPlayerUsingSameCard(currentPlayerTopCard, playerNumber, characteristic, oppositePlayerTopCard)
+        return getNextPlayerUsingSameCard(currentPlayerTopCard, playerNumber, newCharacteristic, oppositePlayerTopCard)
     }
 }
 
